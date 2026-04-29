@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elvys Chaves</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #000000;
+      --surface: #0a0a0a;
+      --border:  #2a2a2a;
+      --text:    #ffffff;
+      --muted:   #666666;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    ::selection { background: #ffffff; color: #000000; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+    /* ─── NAV ─── */
+    nav { display: none; }
+    body.secondary nav {
+      position: fixed; top: 0; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 3.5rem;
+      background: rgba(0,0,0,.85);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: .95rem; font-weight: 400; letter-spacing: .04em;
+      color: #ffffff; text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-links { display: flex; gap: .25rem; list-style: none; }
+
+    .nav-links a {
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      color: var(--muted); text-decoration: none;
+      font-size: .88rem; letter-spacing: .04em;
+      transition: color .2s, border-color .2s;
+      cursor: pointer;
+      padding: .3rem .9rem;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+
+    .nav-links a::before {
+      content: '> ';
+      color: var(--border);
+      transition: color .2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: #ffffff; border-color: var(--border); }
+
+    .nav-links a:hover::before,
+    .nav-links a.active::before { color: #ffffff; }
+
+    /* ─── PAGES ─── */
+    .page {
+      display: none;
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+
+    .page.active { display: block; }
+
+    /* ─── BLANK PAGE PLACEHOLDER ─── */
+    .page-blank {
+      min-height: calc(100vh - 80px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .page-blank .page-name {
+      font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1rem;
+    }
+
+    .page-blank h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800; letter-spacing: -.02em;
+      color: var(--text); margin-bottom: 1rem;
+    }
+
+    .page-blank p {
+      color: var(--muted); font-size: .95rem; max-width: 380px;
+    }
+
+    .page-blank .dot-row {
+      display: flex; gap: .5rem; margin-top: 2.5rem;
+    }
+
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--border);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    .dot:nth-child(2) { animation-delay: .3s; }
+    .dot:nth-child(3) { animation-delay: .6s; }
+
+    @keyframes pulse {
+      0%, 100% { background: var(--border); }
+      50%       { background: #555; }
+    }
+
+    /* ─── HOME PAGE ─── */
+    #home {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 2rem 2rem 8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle noise */
+    #home::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: .5;
+    }
+
+    /* Orbs */
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); pointer-events: none;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+    .orb1 { width: 480px; height: 480px; background: rgba(255,255,255,.04); top: -120px; left: -160px; }
+    .orb2 { width: 360px; height: 360px; background: rgba(255,255,255,.03); bottom: -80px; right: -100px; animation-delay: -5s; }
+
+    @keyframes drift {
+      from { transform: translate(0,0); }
+      to   { transform: translate(40px, 50px); }
+    }
+
+    .hero-eyebrow {
+      font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1.4rem;
+      animation: fadeUp .8s ease both;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 800; line-height: 1.05; letter-spacing: -.03em;
+      white-space: nowrap;
+      animation: fadeUp .9s .1s ease both;
+    }
+
+    .hero-sub {
+      max-width: 500px; margin: 1.6rem auto 3rem;
+      color: var(--muted); font-size: 1.05rem;
+      animation: fadeUp 1s .2s ease both;
+    }
+
+    .hero-cta {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp 1s .35s ease both;
+    }
+
+    .btn {
+      padding: .75rem 2rem; border-radius: 999px;
+      font-size: .85rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: transform .2s, opacity .2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: #ffffff; color: #000000;
+    }
+    .btn-primary:hover { opacity: .88; }
+
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: #555; }
+
+    .hero-menu {
+      display: flex; flex-direction: column;
+      align-items: center; gap: .1rem;
+      margin-top: 3rem;
+      animation: fadeUp 1s .3s ease both;
+    }
+
+    .menu-btn {
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: .95rem; font-weight: 400;
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+      padding: .45rem 1.2rem;
+      letter-spacing: .04em;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      transition: color .2s, border-color .2s;
+      width: 220px;
+      text-align: left;
+    }
+
+    .menu-btn:hover {
+      color: #ffffff;
+      border-color: var(--border);
+    }
+
+    .menu-btn::before {
+      content: '> ';
+      color: var(--border);
+      transition: color .2s;
+    }
+
+    .menu-btn:hover::before {
+      color: #ffffff;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── SOBRE ─── */
+    .sobre-wrap {
+      max-width: 1020px; margin: 0 auto;
+      padding: 5rem 2rem 5rem;
+    }
+
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .sobre-img-frame {
+      width: 100%;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .sobre-img-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: grayscale(100%);
+      display: block;
+    }
+
+    .sobre-text-col { padding-top: .5rem; }
+
+    .sobre-title {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 800; letter-spacing: -.02em;
+      margin-bottom: 2rem;
+    }
+
+    .sobre-p {
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.85;
+      margin-bottom: 1.4rem;
+      text-align: justify;
+    }
+
+    /* Exposições */
+    .expo-section {
+      max-width: 1020px; margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    .expo-section-title {
+      font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 3rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .expo-col-title {
+      font-family: 'Courier New', monospace;
+      font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+      color: #fff; margin-bottom: 1.5rem;
+    }
+
+    .expo-cols {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+    }
+
+    .expo-nacional-cols {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+    }
+
+    .expo-list { list-style: none; }
+
+    .expo-item {
+      display: grid; grid-template-columns: 46px 1fr;
+      gap: .6rem;
+      padding: .9rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .expo-year {
+      font-family: 'Courier New', monospace;
+      font-size: .8rem; color: var(--muted);
+      padding-top: .08rem;
+    }
+
+    .expo-desc {
+      font-size: .88rem; color: #ccc; line-height: 1.6;
+    }
+
+    @media (max-width: 700px) {
+      .expo-nacional-cols { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .sobre-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .sobre-img-frame { aspect-ratio: 4/3; }
+    }
+
+    /* ─── FORMAÇÃO ─── */
+    .formacao-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .formacao-item {
+      display: flex; gap: 1.2rem;
+      border: 1px solid var(--border);
+      border-left: 2px solid #fff;
+      padding: 1.2rem 1.4rem;
+      align-items: flex-start;
+    }
+
+    .formacao-periodo {
+      font-family: 'Courier New', monospace;
+      font-size: .78rem; color: var(--muted);
+      white-space: nowrap; padding-top: .15rem;
+      min-width: 58px;
+    }
+
+    .formacao-titulo {
+      font-size: .95rem; font-weight: 700;
+      color: #fff; margin-bottom: .35rem;
+    }
+
+    .formacao-detalhe {
+      font-size: .82rem; color: var(--muted); line-height: 1.5;
+    }
+
+    @media (max-width: 700px) {
+      .formacao-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── CONTATO TERMINAL ─── */
+    .terminal-wrap {
+      min-height: calc(100vh - 80px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+
+    .terminal-window {
+      width: 100%; max-width: 600px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: 'Courier New', 'Lucida Console', monospace;
+    }
+
+    .terminal-bar {
+      background: #111;
+      border-bottom: 1px solid var(--border);
+      padding: .7rem 1rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+
+    .t-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border); display: inline-block;
+    }
+
+    .t-title {
+      font-size: .75rem; color: var(--muted);
+      margin-left: .6rem; letter-spacing: .08em;
+    }
+
+    .terminal-body {
+      padding: 1.8rem 2rem 2rem;
+      background: #000;
+    }
+
+    .t-line { display: flex; align-items: center; gap: .6rem; margin-bottom: .2rem; }
+
+    .t-prompt { color: var(--muted); font-size: .88rem; white-space: nowrap; }
+    .t-cmd    { color: #fff; font-size: .88rem; }
+
+    .t-output {
+      display: block;
+      color: #aaa; font-size: .88rem;
+      padding-left: 1.6rem;
+      margin-bottom: .2rem;
+    }
+
+    .t-link {
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .t-link:hover { color: #fff; }
+
+    .t-form { display: flex; flex-direction: column; gap: .6rem; }
+
+    .t-field {
+      display: flex; align-items: center; gap: .6rem;
+    }
+
+    .t-field-col { flex-direction: column; align-items: flex-start; gap: .4rem; }
+
+    .t-field input,
+    .t-field textarea {
+      font-family: 'Courier New', monospace;
+      font-size: .88rem;
+      background: transparent;
+      border: none; border-bottom: 1px solid var(--border);
+      color: #fff; outline: none;
+      padding: .2rem .4rem;
+      flex: 1; width: 100%;
+      transition: border-color .2s;
+      caret-color: #fff;
+    }
+
+    .t-field input:focus,
+    .t-field textarea:focus { border-color: #555; }
+
+    .t-field textarea { resize: none; width: 100%; line-height: 1.5; }
+
+    .t-submit {
+      font-family: 'Courier New', monospace;
+      font-size: .88rem;
+      background: transparent; color: var(--muted);
+      border: none; cursor: pointer;
+      padding: .3rem 0;
+      transition: color .2s;
+      letter-spacing: .06em;
+    }
+    .t-submit:hover { color: #fff; }
+
+    .t-cursor {
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 2rem; text-align: center;
+      color: var(--muted); font-size: .78rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      nav { padding: 1.1rem 1.5rem; }
+      .nav-links { gap: 1.4rem; }
+      .nav-links a { font-size: .75rem; letter-spacing: .08em; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="logo" onclick="navigate('home')">Elvys Chaves</span>
+  <ul class="nav-links">
+    <li><a onclick="navigate('trabalhos')"   id="nav-trabalhos">Trabalhos</a></li>
+    <li><a onclick="navigate('publicacoes')" id="nav-publicacoes">Publicações</a></li>
+    <li><a onclick="navigate('sobre')"       id="nav-sobre">Sobre</a></li>
+    <li><a onclick="navigate('contato')"     id="nav-contato">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="page-home">
+  <section id="home">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+
+    <h1>Elvys Chaves</h1>
+    <div class="hero-menu">
+      <a class="menu-btn" onclick="navigate('trabalhos')">_trabalhos</a>
+      <a class="menu-btn" onclick="navigate('publicacoes')">_publicações</a>
+      <a class="menu-btn" onclick="navigate('sobre')">_sobre</a>
+      <a class="menu-btn" onclick="navigate('contato')">_contato</a>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ SOBRE ═══ -->
+<div class="page" id="page-sobre">
+  <div class="sobre-wrap">
+    <div class="sobre-grid">
+
+      <div class="sobre-img-col">
+        <div class="sobre-img-frame">
+          <img src="foto.jpg" alt="Elvys Chaves" />
+        </div>
+      </div>
+
+      <div class="sobre-text-col">
+        <p class="page-name">Sobre</p>
+        <h2 class="sobre-title">Elvys Chaves</h2>
+
+        <p class="sobre-p">Elvys Chaves é artista e pesquisador brasileiro que atua no campo da arte e tecnologia, com foco em realidade aumentada, ambientes virtuais e práticas digitais. Sua produção investiga as relações entre corpo, imagem e dados, explorando como tecnologias contemporâneas reconfiguram experiências de presença, percepção e memória.</p>
+
+        <p class="sobre-p">Desenvolve obras que transitam entre o físico e o virtual, incorporando elementos como modelagem 3D, interatividade e visualidades híbridas. Seu trabalho frequentemente aborda questões ligadas à materialidade da arte digital, aos modos de circulação das imagens e aos processos de construção e preservação de narrativas no ambiente tecnológico.</p>
+
+        <p class="sobre-p">Além da produção artística, atua também em projetos de pesquisa, formação e mediação cultural, com interesse na integração entre práticas artísticas e ferramentas emergentes. Sua trajetória inclui o desenvolvimento de experiências imersivas, obras em realidade aumentada e investigações que tensionam os limites entre arte, tecnologia e cotidiano contemporâneo.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Exposições Coletivas -->
+  <div class="expo-section">
+    <p class="expo-section-title">Formação</p>
+    <div class="formacao-grid">
+      <div class="formacao-item">
+        <span class="formacao-periodo">2025 – 27</span>
+        <div class="formacao-info">
+          <p class="formacao-titulo">Mestrando em Interartes e Novas Mídias</p>
+          <p class="formacao-detalhe">Orientação do Prof. Dr. Daniel Hora · Universidade Federal do Espírito Santo — UFES</p>
+        </div>
+      </div>
+      <div class="formacao-item">
+        <span class="formacao-periodo">2016 – 22</span>
+        <div class="formacao-info">
+          <p class="formacao-titulo">Graduado em Artes Visuais Licenciatura</p>
+          <p class="formacao-detalhe">Universidade Federal do Espírito Santo — UFES</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="expo-section-title" style="margin-top:3.5rem;">Exposições Coletivas</p>
+
+    <div class="expo-cols">
+
+      <!-- INTERNACIONAL -->
+      <div>
+        <p class="expo-col-title">_internacional</p>
+        <ul class="expo-list">
+          <li class="expo-item">
+            <span class="expo-year">2026</span>
+            <span class="expo-desc"><em>Future Forward digital exhibition</em>, com a obra <em>Wi-Fi Grátis (ou intromissão)</em> — Fugue Gallery's, Nova York, EUA. Curadoria de Zoe Ogle. 12 fev – 12 mar.</span>
+          </li>
+          <li class="expo-item">
+            <span class="expo-year">2024</span>
+            <span class="expo-desc"><em>MATE Festival</em> — Convento de São Francisco, Coimbra, Portugal. 19 – 22 out.</span>
+          </li>
+          <li class="expo-item">
+            <span class="expo-year">2018</span>
+            <span class="expo-desc"><em>TERCERA LLAMADA ARTE CORREO HURLINGHAM AR</em> — Intervenção na Av. Roca 1000, Hurlingham, Buenos Aires, Argentina. 15 jul.</span>
+          </li>
+        </ul>
+      </div>
+      <!-- Coluna vazia -->
+      <div></div>
+
+    </div>
+
+    <!-- NACIONAL — largura total, duas colunas -->
+    <p class="expo-col-title" style="margin-top:3rem;">_nacional</p>
+    <div class="expo-nacional-cols">
+      <ul class="expo-list">
+        <li class="expo-item">
+          <span class="expo-year">2025</span>
+          <span class="expo-desc"><em>Narrativas contra-hegemônicas</em>, com a obra <em>Wi-Fi Grátis (ou intromissão)</em> — MAES, Vitória - ES. Curadoria de Clara Sampaio. 20 mar – 20 abr.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2025</span>
+          <span class="expo-desc"><em>Exposição Realidade Expansiva III</em> — Parque Cultural Reserva, Vitória - ES. Curadoria de Elvys Chaves e Carlo Schiavini. 14 fev – 14 mar.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2024</span>
+          <span class="expo-desc"><em>Clube do Colecionador</em> — Galeria Matias Brotas, Vitória - ES. 04 dez – 04 mar 2025.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2024</span>
+          <span class="expo-desc"><em>NFT Brasil</em> — Pavilhão da Bienal de SP, Parque Ibirapuera, São Paulo - SP. 12 – 13 set.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2024</span>
+          <span class="expo-desc"><em>Exposição Ocupa Sacy</em> — Centro Cultural Sesc Glória, Vitória - ES. Curadoria de Rudá Andrade. 11 jan – 28 abr.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2023</span>
+          <span class="expo-desc"><em>Exposição Experiências Modulares para o Futuro</em> — SESC Barra Mansa, RJ. Curadoria de Leandra Espírito Santo. 09 set – 10 dez.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2023</span>
+          <span class="expo-desc"><em>Exposição Realidade Expansiva II</em> — Terminal de Campo Grande, Cariacica - ES. Curadoria de Elvys Chaves e Carlo Schiavini. 30 mai – 12 jul.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2022</span>
+          <span class="expo-desc"><em>Preza Expo</em> — Galeria GAEU, Vitória - ES. Curadoria de Waldir Barreto. 14 nov – 27 out.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2022</span>
+          <span class="expo-desc"><em>Bienal de Arte Digital</em> — Museu de Telecomunicações Oi Futuro, Rio de Janeiro - RJ. 05 nov 2022 – 22 jan 2023.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2022</span>
+          <span class="expo-desc"><em>Pupila Dilata</em> — Metaverso Aurim. 08 nov 2022 – dias atuais.</span>
+        </li>
+      </ul>
+      <ul class="expo-list">
+        <li class="expo-item">
+          <span class="expo-year">2022</span>
+          <span class="expo-desc"><em>GEOESTRUTURACIBENETICA</em> — Parque Cultural Casa do Governador, Vila Velha - ES. 28 mai 2022 – 28 mai 2023.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2022</span>
+          <span class="expo-desc"><em>Festival Origraffes – Original Graffiti ES. Encontro Nacional de Graffiti</em> — Feu Rosa, Serra - ES. 19 – 21 jul.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2022</span>
+          <span class="expo-desc"><em>Exposição Simultânea</em> — Casa Flor, Centro de Vitória - ES. 31 mar – 07 mai.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2021</span>
+          <span class="expo-desc"><em>Exposição Realidade Expansiva</em> — Museu Casa Porto de Artes Plásticas, Vitória - ES. Curadoria de Elvys Chaves e Carlo Schiavini. 21 jun – 23 ago.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2019</span>
+          <span class="expo-desc"><em>Festival Origraffes – Original Graffiti ES. Encontro Nacional de Graffiti</em> — Feu Rosa, Serra - ES. 19 – 21 jul.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2019</span>
+          <span class="expo-desc"><em>Independence Day – Feira de Arte Independente</em> — Studio Etá, Vitória - ES. 18 jul.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2018</span>
+          <span class="expo-desc"><em>I Mostra de Artes e Talentos Fênix</em> — Instituto Fênix de Ensino e Pesquisa, Vitória - ES. 16 dez.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2018</span>
+          <span class="expo-desc"><em>Ex Libris: Marca de uma Identidade</em> — Galeria Sesc de Artes, Palmas - TO. Curadoria de André de Miranda. 02 – 31 out.</span>
+        </li>
+        <li class="expo-item">
+          <span class="expo-year">2017</span>
+          <span class="expo-desc"><em>Frágil – pele fina da civilização</em> — Galeria de Arte e Pesquisa GAP, UFES, Vitória - ES. Curadoria de Yiftah Peled e Bianka Mieskes. 17 mai – 31 abr.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ TRABALHOS ═══ -->
+<div class="page" id="page-trabalhos">
+  <div class="page-blank">
+    <p class="page-name">Trabalhos</p>
+    <h2>Em breve</h2>
+    <p>O conteúdo desta página será adicionado em breve.</p>
+    <div class="dot-row">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PUBLICAÇÕES ═══ -->
+<div class="page" id="page-publicacoes">
+  <div class="page-blank">
+    <p class="page-name">Publicações</p>
+    <h2>Em breve</h2>
+    <p>O conteúdo desta página será adicionado em breve.</p>
+    <div class="dot-row">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTATO ═══ -->
+<div class="page" id="page-contato">
+  <div class="terminal-wrap">
+
+    <div class="terminal-window">
+      <!-- Header bar -->
+      <div class="terminal-bar">
+        <span class="t-dot"></span><span class="t-dot"></span><span class="t-dot"></span>
+        <span class="t-title">contato.sh</span>
+      </div>
+
+      <!-- Body -->
+      <div class="terminal-body">
+
+        <p class="t-line"><span class="t-prompt">~$</span> <span class="t-cmd">whoami</span></p>
+        <p class="t-output">elvys chaves</p>
+        <br/>
+
+        <p class="t-line"><span class="t-prompt">~$</span> <span class="t-cmd">cat redes_sociais.txt</span></p>
+        <a class="t-output t-link" href="https://instagram.com/atrasado.alguns.min" target="_blank">
+          instagram  →  @atrasado.alguns.min
+        </a>
+        <br/>
+
+        <p class="t-line"><span class="t-prompt">~$</span> <span class="t-cmd">send_email --to elvys.ocho@gmail.com</span></p>
+        <br/>
+
+        <form class="t-form" onsubmit="handleSubmit(event)">
+          <div class="t-field">
+            <label class="t-prompt">&gt; nome:</label>
+            <input type="text" name="name" autocomplete="off" required/>
+          </div>
+          <div class="t-field">
+            <label class="t-prompt">&gt; email:</label>
+            <input type="email" name="email" autocomplete="off" required/>
+          </div>
+          <div class="t-field">
+            <label class="t-prompt">&gt; assunto:</label>
+            <input type="text" name="subject" autocomplete="off" required/>
+          </div>
+          <div class="t-field t-field-col">
+            <label class="t-prompt">&gt; mensagem:</label>
+            <textarea name="message" rows="4" required></textarea>
+          </div>
+          <div class="t-field">
+            <button type="submit" class="t-submit">[ enviar ] <span class="t-cursor">▌</span></button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>© 2026 Elvys Chaves</footer>
+
+<script>
+  const pages = ['home', 'sobre', 'trabalhos', 'publicacoes', 'contato'];
+  const navIds = ['sobre', 'trabalhos', 'publicacoes', 'contato'];
+
+  function navigate(id) {
+    // Hide all pages
+    pages.forEach(p => {
+      const el = document.getElementById('page-' + p);
+      if (el) el.classList.remove('active');
+    });
+
+    // Remove active from all nav links
+    navIds.forEach(n => {
+      const el = document.getElementById('nav-' + n);
+      if (el) el.classList.remove('active');
+    });
+
+    // Show target page
+    const target = document.getElementById('page-' + id);
+    if (target) target.classList.add('active');
+
+    // Activate nav link
+    const navEl = document.getElementById('nav-' + id);
+    if (navEl) navEl.classList.add('active');
+
+    // Show/hide nav bar
+    if (id === 'home') {
+      document.body.classList.remove('secondary');
+    } else {
+      document.body.classList.add('secondary');
+    }
+
+    // Update hash
+    window.location.hash = id === 'home' ? '' : id;
+    window.scrollTo(0, 0);
+  }
+
+  // Contact form
+  function handleSubmit(e) {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const name    = data.get('name')    || '';
+    const email   = data.get('email')   || '';
+    const subject = data.get('subject') || '';
+    const message = data.get('message') || '';
+    const subject_enc = encodeURIComponent(subject);
+    const body    = encodeURIComponent('De: ' + name + '\nEmail: ' + email + '\n\n' + message);
+    window.location.href = 'mailto:elvys.ocho@gmail.com?subject=' + subject_enc + '&body=' + body;
+    const btn = e.target.querySelector('.t-submit');
+    btn.innerHTML = '[ enviado ✓ ] <span class="t-cursor">▌</span>';
+    btn.style.color = '#fff';
+    setTimeout(() => {
+      btn.innerHTML = '[ enviar ] <span class="t-cursor">▌</span>';
+      btn.style.color = '';
+      e.target.reset();
+    }, 3000);
+  }
+
+  // Handle back/forward and direct URL access
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.replace('#', '') || 'home';
+    navigate(hash);
+  });
+
+  // On load, check hash
+  window.addEventListener('load', () => {
+    const hash = window.location.hash.replace('#', '') || 'home';
+    navigate(hash);
+  });
+</script>
+</body>
+</html>
