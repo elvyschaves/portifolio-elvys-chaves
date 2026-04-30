@@ -85,6 +85,14 @@
 
     .page.active { display: block; }
 
+    /* Páginas de projeto: scroll interno */
+    .page.proj-page {
+      padding-top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
     /* ─── BLANK PAGE PLACEHOLDER ─── */
     .page-blank {
       min-height: calc(100vh - 80px);
@@ -127,8 +135,10 @@
     }
 
     /* ─── HOME PAGE ─── */
+    body.on-home { overflow: hidden; height: 100vh; }
+
     #home {
-      min-height: 100vh;
+      height: 100vh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       text-align: center;
@@ -244,6 +254,467 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ─── PROJETO CAPA ─── */
+    #page-proj-wifi {
+      padding-top: 0; /* remove o padding da nav — capa começa do topo */
+    }
+
+    .proj-capa {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .proj-capa img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: 30% center;
+      display: block;
+    }
+
+    @media (orientation: portrait), (max-aspect-ratio: 1/1) {
+      .proj-capa img { object-position: left center; }
+      .proj-capa-overlay { padding: 5rem 1.8rem 2.5rem; }
+    }
+
+    .proj-capa-placeholder {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: #0a0a0a;
+      z-index: 0;
+    }
+    .proj-capa-placeholder span {
+      font-family: 'Courier New', monospace;
+      font-size: .75rem; color: var(--muted);
+    }
+    .proj-capa img[src] ~ .proj-capa-placeholder { display: none; }
+
+    .proj-capa-overlay {
+      position: absolute; inset: 0; z-index: 2;
+      background: linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,.05) 40%, transparent 100%);
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 7rem 3.5rem 3rem;
+    }
+
+    .proj-capa-info { }
+
+    .proj-capa-label {
+      font-family: 'Courier New', monospace;
+      font-size: .75rem; color: rgba(255,255,255,.55);
+      letter-spacing: .1em; margin-bottom: .6rem;
+      text-align: right;
+    }
+
+    .proj-capa-title {
+      font-size: clamp(2.4rem, 6vw, 5.5rem);
+      font-weight: 800; letter-spacing: -.02em;
+      line-height: 1.05; color: #fff;
+      text-align: right;
+    }
+
+    .proj-capa-scroll {
+      font-family: 'Courier New', monospace;
+      font-size: .72rem; color: rgba(255,255,255,.35);
+      letter-spacing: .14em;
+      animation: fadeUpDown 2.5s ease-in-out infinite;
+    }
+
+    @keyframes fadeUpDown {
+      0%, 100% { opacity: .35; transform: translateY(0); }
+      50%       { opacity: .7;  transform: translateY(-4px); }
+    }
+
+    /* ─── TRABALHOS GRID ─── */
+    .trab-wrap {
+      width: 100%;
+      padding: 3rem 2.5rem 1rem;
+    }
+
+    .trab-header { margin-bottom: 1.5rem; }
+
+    .trab-hint {
+      font-family: 'Courier New', monospace;
+      font-size: .8rem;
+      color: var(--muted);
+      letter-spacing: .03em;
+      user-select: none;
+    }
+    .trab-hint-prompt { color: #3a3a3a; }
+    .trab-hint-cursor {
+      color: var(--muted);
+      animation: blink .9s step-end infinite;
+      margin-left: 1px;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .trab-grid {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 180px);
+      min-height: 400px;
+    }
+
+    .trab-card {
+      position: absolute;
+      width: 260px;
+      cursor: grab;
+      user-select: none;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: border-color .25s, box-shadow .25s, opacity .2s;
+      z-index: 1;
+    }
+    .trab-card:hover { border-color: #555; }
+    .trab-card.is-dragging {
+      cursor: grabbing;
+      opacity: .92;
+      border-color: #555;
+      box-shadow: 0 24px 60px rgba(0,0,0,.8), 0 0 0 1px #444;
+      transition: none;
+      z-index: 100;
+    }
+
+    .trab-thumb {
+      aspect-ratio: 4/3;
+      background: #0a0a0a;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trab-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      position: relative; z-index: 1;
+    }
+
+    /* Placeholder visível quando img não carrega */
+    .trab-thumb-placeholder {
+      position: absolute; inset: 0; z-index: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .trab-thumb-placeholder span {
+      font-family: 'Courier New', monospace;
+      font-size: .7rem; color: var(--muted);
+    }
+    .trab-thumb img[src] ~ .trab-thumb-placeholder { display: none; }
+
+    .trab-info {
+      padding: .85rem 1rem;
+      display: flex; align-items: baseline; gap: .8rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .trab-year {
+      font-family: 'Courier New', monospace;
+      font-size: .72rem; color: var(--muted); white-space: nowrap;
+    }
+
+    .trab-title {
+      font-size: .9rem; font-weight: 600; color: #fff;
+      line-height: 1.4;
+    }
+
+    /* ─── PROJETO DETALHE ─── */
+    .proj-wrap {
+      max-width: 1020px; margin: 0 auto;
+      padding: 2.5rem 2rem 5rem;
+    }
+
+    .proj-back {
+      font-family: 'Courier New', monospace;
+      font-size: .82rem; color: var(--muted);
+      background: none; border: none; cursor: pointer;
+      padding: 0; margin-bottom: 2rem;
+      transition: color .2s;
+      display: block;
+    }
+    .proj-back:hover { color: #fff; }
+
+    .proj-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+      font-weight: 800; letter-spacing: -.02em;
+      margin-bottom: 2.5rem;
+    }
+
+    .proj-body {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 2.5rem;
+      align-items: stretch;
+    }
+
+    /* Imagem placeholder helper */
+    .proj-img-placeholder {
+      position: absolute; inset: 0; z-index: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: #0a0a0a;
+    }
+    .proj-img-placeholder span {
+      font-family: 'Courier New', monospace;
+      font-size: .65rem; color: var(--muted); text-align: center; padding: .5rem;
+    }
+
+    /* Hero image */
+    .proj-hero-img {
+      width: 100%; aspect-ratio: 16/7;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    .proj-hero-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+      position: relative; z-index: 1;
+    }
+
+    /* Faixa de 3 imagens */
+    .proj-img-row3 {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Faixa de 2 imagens */
+    .proj-img-row2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: .8rem;
+    }
+
+    .proj-img-wide {
+      aspect-ratio: 16/9;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .proj-img-wide img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+      position: relative; z-index: 1;
+    }
+
+    .proj-img-thumb {
+      aspect-ratio: 4/3;
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      transition: border-color .2s;
+    }
+    .proj-img-thumb:hover { border-color: #555; }
+    .proj-img-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block; position: relative; z-index: 1;
+    }
+
+    /* Coluna lateral de imagens (desktop) */
+    .proj-img-col {
+      display: flex; flex-direction: column; gap: .8rem;
+    }
+    .proj-img-tall {
+      height: 100%;
+      min-height: 200px;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .proj-img-tall img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+      position: relative; z-index: 1;
+    }
+
+    /* Lado texto */
+    .proj-section { margin-bottom: 2rem; }
+
+    .proj-section-label {
+      font-family: 'Courier New', monospace;
+      font-size: .72rem; color: var(--muted);
+      letter-spacing: .1em; margin-bottom: .8rem;
+      display: block;
+    }
+
+    .proj-text {
+      font-size: .92rem; color: #aaa; line-height: 1.8; text-align: justify;
+    }
+
+    .proj-ficha {
+      width: 100%; border-collapse: collapse;
+      font-size: .85rem;
+    }
+    .proj-ficha tr { border-bottom: 1px solid var(--border); }
+    .proj-ficha td { padding: .5rem .3rem; vertical-align: top; }
+    .proj-ficha td:first-child {
+      font-family: 'Courier New', monospace;
+      color: var(--muted); white-space: nowrap;
+      padding-right: 1rem; width: 90px;
+    }
+    .proj-ficha td:last-child { color: #ccc; }
+
+    .proj-link {
+      font-family: 'Courier New', monospace;
+      font-size: .88rem; color: var(--muted);
+      text-decoration: none; display: block;
+      padding: .35rem 0;
+      transition: color .2s;
+    }
+    .proj-link:hover { color: #fff; }
+
+    /* Texto crítico — largura total */
+    .proj-critic-full {
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .proj-critic-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .proj-critic-title {
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 800; letter-spacing: .04em;
+      color: #fff; margin-bottom: .5rem;
+    }
+
+    .proj-critic-author {
+      font-size: .85rem; color: var(--muted);
+      margin-bottom: .1rem;
+    }
+
+    .proj-critic-contrib {
+      font-size: .85rem; color: var(--muted);
+      margin-bottom: .8rem;
+    }
+
+    .proj-critic-context {
+      font-size: .78rem; color: #444;
+      font-style: italic; line-height: 1.6;
+    }
+
+    /* Duas colunas de texto no desktop */
+    .proj-critic-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .proj-critic-col {
+      display: flex; flex-direction: column; gap: 1.1rem;
+    }
+
+    .proj-critic-col p {
+      font-size: .9rem; color: #999;
+      line-height: 1.9; text-align: justify;
+    }
+
+    .proj-critic-note {
+      font-size: .76rem !important;
+      color: #444 !important;
+      border-top: 1px solid var(--border);
+      padding-top: .8rem;
+      margin-top: .5rem;
+    }
+
+    @media (orientation: portrait), (max-aspect-ratio: 1/1) {
+      .proj-critic-columns { grid-template-columns: 1fr; gap: 0; }
+    }
+
+    /* ─── ANIMAÇÕES DE ENTRADA ─── */
+    .anim {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .anim.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Delay escalonado para filhos diretos */
+    .proj-img-row3 .proj-img-thumb:nth-child(1) { transition-delay: .0s; }
+    .proj-img-row3 .proj-img-thumb:nth-child(2) { transition-delay: .1s; }
+    .proj-img-row3 .proj-img-thumb:nth-child(3) { transition-delay: .2s; }
+    .proj-img-row2 .proj-img-wide:nth-child(1)  { transition-delay: .0s; }
+    .proj-img-row2 .proj-img-wide:nth-child(2)  { transition-delay: .15s; }
+
+    /* ─── PARALLAX COVER (Wi-Fi + Mineral Data) ─── */
+    #page-proj-vestiveis .proj-capa img {
+      object-position: center top;
+    }
+
+    #page-proj-wifi .proj-capa,
+    #page-proj-mineral .proj-capa,
+    #page-proj-vestiveis .proj-capa {
+      position: sticky;
+      top: 0;
+      z-index: 0;
+    }
+    #page-proj-wifi .proj-wrap,
+    #page-proj-mineral .proj-wrap,
+    #page-proj-vestiveis .proj-wrap {
+      position: relative;
+      z-index: 1;
+      background: var(--bg);
+      box-shadow: 0 -40px 60px 10px var(--bg);
+      max-width: 100%;
+      padding-left: max(2rem, calc((100% - 1020px) / 2 + 2rem));
+      padding-right: max(2rem, calc((100% - 1020px) / 2 + 2rem));
+    }
+
+    /* ─── LIGHTBOX ─── */
+    #lightbox {
+      display: none;
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,.93);
+      align-items: center; justify-content: center;
+      cursor: zoom-out;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox-img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+      border: 1px solid var(--border);
+      cursor: default;
+      animation: lbFadeIn .22s ease;
+    }
+    @keyframes lbFadeIn {
+      from { opacity: 0; transform: scale(.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .lb-close {
+      position: fixed; top: 1.5rem; right: 2rem;
+      background: none; border: none;
+      color: var(--muted); font-size: 1.4rem;
+      cursor: pointer; line-height: 1;
+      transition: color .2s;
+    }
+    .lb-close:hover { color: #fff; }
+    .lightbox-trigger {
+      cursor: zoom-in;
+    }
+    .lightbox-trigger img {
+      transition: opacity .2s;
+    }
+    .lightbox-trigger:hover img { opacity: .8; }
+
+    @media (orientation: portrait), (max-aspect-ratio: 1/1) {
+      .proj-body { grid-template-columns: 1fr; }
+      .proj-img-col { display: none; }
+      .proj-img-row3 { grid-template-columns: 1fr 1fr; }
+      .proj-img-row2 { grid-template-columns: 1fr; }
+
+      /* Trabalhos mobile: scroll habilitado, cards livres */
+      #page-trabalhos {
+        overflow-y: auto;
+        height: 100vh;
+      }
+      .trab-wrap { padding: 3rem 1rem 3rem; }
+      .trab-card { width: min(240px, calc(100vw - 60px)); }
+    }
+
     /* ─── SOBRE ─── */
     .sobre-wrap {
       max-width: 1020px; margin: 0 auto;
@@ -259,7 +730,6 @@
 
     .sobre-img-frame {
       width: 100%;
-      aspect-ratio: 3/4;
       overflow: hidden;
       border: 1px solid var(--border);
     }
@@ -338,9 +808,34 @@
       .expo-nacional-cols { grid-template-columns: 1fr; }
     }
 
+    @media (orientation: portrait), (max-aspect-ratio: 1/1) {
+      .expo-cols {
+        grid-template-columns: 1fr;
+      }
+      .expo-cols > div:last-child { display: none; }
+    }
+
+    .sobre-img-frame:has(.sobre-ascii) {
+      border: none;
+      overflow: visible;
+    }
+
+    .sobre-ascii {
+      display: block;
+      font-family: 'Courier New', monospace;
+      font-size: .38rem;
+      line-height: 1.2;
+      color: #ffffff;
+      white-space: pre;
+      overflow: visible;
+      background: transparent;
+      user-select: none;
+      transform-origin: top left;
+    }
+
     @media (max-width: 760px) {
       .sobre-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .sobre-img-frame { aspect-ratio: 4/3; }
+      .sobre-ascii { font-size: .28rem; }
     }
 
     /* ─── FORMAÇÃO ─── */
@@ -481,11 +976,68 @@
       border-top: 1px solid var(--border);
     }
 
-    /* ─── Responsive ─── */
-    @media (max-width: 640px) {
-      nav { padding: 1.1rem 1.5rem; }
-      .nav-links { gap: 1.4rem; }
-      .nav-links a { font-size: .75rem; letter-spacing: .08em; }
+    /* ─── Mobile menu (portrait / altura > largura) ─── */
+    .menu-dots-btn {
+      display: none;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem; color: var(--muted);
+      padding: .2rem .5rem;
+      letter-spacing: .1em;
+      transition: color .2s;
+    }
+    .menu-dots-btn:hover { color: #fff; }
+
+    .mobile-dropdown {
+      display: none;
+      position: fixed; top: 56px; left: 0; right: 0;
+      background: rgba(0,0,0,.97);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      z-index: 99;
+      flex-direction: column;
+      padding: .6rem 0 1rem;
+    }
+
+    .mobile-dropdown.open { display: flex; }
+
+    .mobile-dropdown a {
+      font-family: 'Courier New', monospace;
+      font-size: .95rem; color: var(--muted);
+      text-decoration: none; cursor: pointer;
+      padding: .75rem 2rem;
+      border-bottom: 1px solid var(--border);
+      transition: color .2s;
+    }
+    .mobile-dropdown a:last-child { border-bottom: none; }
+    .mobile-dropdown a::before { content: '> '; color: var(--border); transition: color .2s; }
+    .mobile-dropdown a:hover,
+    .mobile-dropdown a.active { color: #fff; }
+    .mobile-dropdown a:hover::before,
+    .mobile-dropdown a.active::before { color: #fff; }
+
+    .sobre-mobile-menu {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 2rem 4rem;
+      border-top: 1px solid var(--border);
+      max-width: 1020px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    @media (orientation: portrait), (max-aspect-ratio: 1/1) {
+      .nav-links { display: none; }
+      .menu-dots-btn { display: block; }
+      .sobre-mobile-menu { display: flex; }
+    }
+
+    @media (orientation: landscape) and (min-aspect-ratio: 1/1) {
+      .nav-links { display: flex; }
+      .menu-dots-btn { display: none; }
+      .mobile-dropdown { display: none !important; }
+      .sobre-mobile-menu { display: none; }
     }
   </style>
 </head>
@@ -500,7 +1052,16 @@
     <li><a onclick="navigate('sobre')"       id="nav-sobre">Sobre</a></li>
     <li><a onclick="navigate('contato')"     id="nav-contato">Contato</a></li>
   </ul>
+  <button class="menu-dots-btn" onclick="toggleMobileMenu()" id="dots-btn">···</button>
 </nav>
+
+<!-- Mobile dropdown -->
+<div class="mobile-dropdown" id="mobile-dropdown">
+  <a onclick="mobileNavigate('trabalhos')"   id="mnav-trabalhos">Trabalhos</a>
+  <a onclick="mobileNavigate('publicacoes')" id="mnav-publicacoes">Publicações</a>
+  <a onclick="mobileNavigate('sobre')"       id="mnav-sobre">Sobre</a>
+  <a onclick="mobileNavigate('contato')"     id="mnav-contato">Contato</a>
+</div>
 
 <!-- ═══ HOME ═══ -->
 <div class="page active" id="page-home">
@@ -525,7 +1086,89 @@
 
       <div class="sobre-img-col">
         <div class="sobre-img-frame">
-          <img src="foto.jpg" alt="Elvys Chaves" />
+<pre class="sobre-ascii">
+                                                   -@==%          - =@  #
+                                      %     @@@* =@@ #=         %@@@@@ @  @@ @:  @@@@
+                                      :@@@ @#=@@      @@=     @%  %@@ @@@@  @@@@@=   @  @@@    @
+                           @@@@:    @*=%      :   @@@@     *@@@@@@@#  @@%  @@@@@@  *=-@    @  :  #
+                                 -%@  @  @@@ @@@@@@@@ * @%@@@=-*@%-*@@@@@@@@%@   @@  @*@
+                   @   =   =   @@@@-@@ @@@@@@@    *@@ @@@@@  -@% =# =@@@=@@* @@   @       =
+                           @    = @@%-        @*@@@@ @@@@@@@@%@@@@@@@@  @@@@@@@@@@@@  =           =
+               @ @@*@@@@ :=:@@@% *   %@@@@@@@@@@@@@#@@@%=@%   @@    = @@% *@**@-  @        #
+                :-  =  :@@@@@-@@@@@@@@@@@@@%@*@@  @*@@%@*= @ - =@@@@@@@@@@% %@@:*@@@@@@    #@@ @@=
+                 @@@@=@@@%#@@@@@@@@@@@@@@:#=@@@@@@@@@@@@@@@@@@@@@@@@@ @@@@@@@@=@@-=@@@@@@@@@@@=@@
+               @@   :@@*@@%@@@@@@@@@@@@@@@@@@@@@#@@@#@@@@*@@@@@@%@@@@@ @@@% @ #@%#@@#:#@@@#@  @@@ @
+              #@=   @ @@@@@@%@@@@@@@@@%@@@@@@@@%@@@@@@@:@@@@@@@#@@#@@@@@@@@@@@@@@@@%@-= *#@-@  %*@@@ *
+             @@ =@ :@@%=@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@%@@@@@*@%@@@@@@@@@@@@@@@@@-@@@%=%@@-        =
+          @@@@ - # @@@@-@@@%@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@@#@@@@@@  @@@@@
+       -   -     @@@*-%@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*#@@@%@@       %@
+       #      @@::@@%-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%*-%@%@- @@@    %
+       @     % @#@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-%@%%@@@@  @@@  @
+       @    *@@@@*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*     -:=@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%*@@@@    %@:
+   = =       #@@@*@#@@@@@@@@@@@@@@@@@@@@@@=*@       :       : =%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@%=#@@@@@@  *=
+   *     @@@@@  #@@@@@@@@@@@@@@@@@@@@@@*-@=%%*#=                   #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#%@@@@@@-   @@-
+       -@=@ @* @@@@@@@@@@@@@@@@@@@@@@@@%   *      ::===*: -::   -:#:#@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@@=* @@@-@@@@ @
+       @@@@ @-#@@%@@@@@@@@@@@@@@@@@@@@@     :                 = -    -: #@@@@@@@@@@@@@@@@@@@@@@@@@@@@=  #@@ :@  @@@
+    @@@@@-% @@@@@@@@@@@@@@@@@@@@@@@@@@@- ::                       :=**===%@@@@@@@@@@@@@@@@@@@@@@@@@@@@* @@ @@@
+   @    @@@ *@@%@@@@@@@@@@@@@@@@@@@@@@@=                              -#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @@@@@@
+   #=@@%@ @@@@@@@@@@@@@@@@@@@@@@@@@@@@#                                  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@# @@%@     @
+     @@#@@ @@%@@@@@@@@@@@@@@@@@@@@@@@#                                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ *@    @@
+%@@@@ @%   @@@@%@@@@@@@@@@@@@@@@@@@@@=@@@@@@@@@@@@@          *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  @ @  @#%
+ @ #@=:@ @-*@@@@@@@@@@@@@@@@@@@@@@@@@-:         #@@%@%=%%**##@@@@*         @@@@@@@@@@@@@@@@@@@@@@@@@@@@#@@@@@@@@
+  @    ==@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%@@@@@@@@%@- #% :   :  @@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    @  @
+    %@@@@@*@ %@@@@@@@@@@@@@@@@@@@@@@@= @@@# @@@@ @@@%@-   -@ @@@ @@@ *@@#  *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#@-    @
+ @@@= #@@@@@*@@@@@@@@@@@@@@@@@@@@@@@@=   :===  :#* -%      :- -**           @@@@@@@@@@@@@@@@@@@@@@@@@@@  @#@@@@ @@@
+ *@# @@@@  *@@@@@@@@@@@@@@@@@@@@@@@@%#   :=::      -                :-*==-  @@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -@#  @
+   @*  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=            :  -                     :@#-@@@@@@@@@@@@@@@@@@@@@@@@*%@@@@  @@@
+   @@@@@#*= @@@@@@@@@@@@@@@@@@@@@%@@@-             -               :       @@ -%@@@@@@@@@@@@@@@@@@@@@@@@@ @ @ @%  %#
+ - *%@#@: @@@@@@@@@@@@@@@@@@@@@@@%@#@@ -         :#@      :=#*             @% :@@@@@@@@@@@@@@@@@@@@@@@@      @ @
+ @@@ @@@@@=##@@@@@@@@@@@@@@@@@@@@@%=@@          :%-           %           %- @@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@%
+   *--@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@%@ :        %%*@      @@ =:          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@
+ @ @@@@@@:%@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ::          @@@                   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ :-@@@@@  @
+:@@@@@%*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-             @*@:@@@@            @@@@@@@@@@@@@@@@@@@@@:@@@@@@@@@@@@@@@@@
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          @@@@@@%@@@@@@@         @@@@@@@@@@@@@@@@@@@@@@@#   @@  @     @
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#     @@@@@            @@@@     #@@@@@@@@@@@@@@@@@@@@ @@@@@@@@  @  @@    @@
+ @@-@ @@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@-         @@@%*#%%@@@@  :-     @@@@@@@@@@@@@@@@@@@#@@@@@@@@@@     =      @
+*@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@# : =  @@*   %@%#  *@%       @@@@@@@@@@@@@@@@@@@@@@@=@@@#    @  @       :
+ @  *:@@@@@@@@@@:%%  @@@@@@@@@@@@@@@@@@@@#%%-       #%      =         @@%@@@@@@@@@@@@@@@@@@@@@@ @@@@@%=  @@:     @%
+@@@@@@@%@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@*##*#   :                   =@@#@@@@@@@@@@@@@@@@@@@@%@@@ @@@@  @  *      @@
+ @@   @ @@@@@@@@@@@@@@@@@@#@@@@@@@@@@@@@@#=%%=*--::==-==***-::      %:@@@@@@@@@@@@@@@@@@@@@@@@=@ =    @@@
+@@= @@--@@@@@@@@@@@@#@@@@@@@@@@@@@@@@@@@##:#%@%:-                 *%:=@ @@@@@@@@@@@@@@@@@@@=@@@  @*@ @@@
+  :   # @@@@@@@@@@#@@@@%@@@@@@@@@@@@% @@@@ =*@@@*                %-: @@@@@@@@@@@@@@@@@@@@#@@ *@@@@ @@@
+ @@@@ @@@#@@@@@@@@= @@@@@@@@@@@@@@@@@@@@:@-- -#@@@@:    : -   #@%*:: @@@%@@@%@@@@@@@@@@@@%%@@  *@@@@*@
+    @ @@@@:@*#@@@@@ @@@@@@@@@@@@@@@@@@@ @@=- ::=%@@@@@%-@-#@@@*:     @@@@@@@@@@@@@@@@@@@@@@@@@@@ @@
+ @=    @@@@#:@@@@@::@@@@@@%@@@@@@@@ @%-@@%==    -*=-:*%   *:::  ::- *@@#-@@@@@@@@@@@@@@@@     @@@@ @
+   @ @@@     @@%#  %=@@@@@@@@@@=@ @   @@%**-::   :-=#*%===      ::  #@@@@@%#@@@@@%@@@@@@@@@@@@@   #
+      @@%@@@@@@@# -@#@:@@@@@@@@@@     @@***=-  :::::  :     :    -:-*@@@@@@@@@@@   @@@@@@@@  @@@  :
+ %@@@  @      @@@@#@@@@@@@@@@@@@@%-   @#=*#=:-    :        :      :@:@@@@@@@ =@@%@  @@@  @@@@ @@@#@#
+ @%@  %@@@@  @      @@@@@@@@:##@@     @#***-#    ::-  :   :       =@ %@@@@@@ %   @@@@@@@@@@-  @@@@
+ -   =@@@@    @@@@@@@        @ @-     @=#%=*= :    :---::::   :   %*  %@@@#@@-   % %@@@ @@@@@  @@@
+       @   =@ @@@@-   % * @ *@@ :     @:%#***-    :: :  :  -     -#*   %@@ - =     @@@ -@@@@@@@@@@@
+         @    @@@: -=  *= -*@@  :  : @@:*@*=*#:                  ##*   @@@   :       @   @@@@@@@@@
+    :  ===:@=   @   =   *@   -       *@  *-###**::: ::    :     -=-   =@@@           @@@@  @@@#@@
+         %    - #        @  #   -     @@ -- =%##-    : :::     :#=:: :%*@@  :    :   %     :@@@@ -
+   :      * @             %=-         @-%=*:  =*=      : :::  -:::-   @#@@            #@=  =      -
+          =               #@    :     @@@   -: :-              :-:=%-#@@@              %@*
+               :          @@      @@    @ %  :-       : :    --*=#%@@@@                  @=              :
+                :     :   @       @@  *  @@ :         :::        *   @                     @                  @:
+                          =      :@@   =  @ =                       %@                                          @@@
+                                @@@    -   @ @                     *@                        @    -   :-          @
+                             @@@@@@         @ =-                   @                     -@@@          :
+                           =    *@    -      %@                   %#        *  :    @@@@@%              :
+                                    *#        %@ @               #@       @@@@@@%%%                     :
+                                   %*          #=-              =@        : ::              :           :
+                                        =       #-@ #           @@       @
+                                 -               *:% @        -=@       @-
+ #                               :-        :      =  @         %*      @-                      :
+ :                                =@              @-   @  @ : #@     @ #                       *
+ -                                 *@              %      @@# @       :                        *
+                                    -#@            @#        =@      :                         :                  @
+                                       @:           %:       :@    :@
+        :%:                             =@          @*   :::- @     :                                            *
+                                          -@         @-    -- @    @                                            %-%
+                                            %@       @#  -#@ @    @                                             @@
+                         :                    =@      @      @    @                                            @
+                                               :@=     @@*@ @@   @-                                               :</pre>
         </div>
       </div>
 
@@ -676,19 +1319,365 @@
     </div>
   </div>
 
+  <!-- Menu mobile — última seção da página Sobre -->
+  <div class="sobre-mobile-menu">
+    <a class="menu-btn" onclick="navigate('trabalhos')">_trabalhos</a>
+    <a class="menu-btn" onclick="navigate('publicacoes')">_publicações</a>
+    <a class="menu-btn" onclick="navigate('sobre')">_sobre</a>
+    <a class="menu-btn" onclick="navigate('contato')">_contato</a>
+  </div>
+
 </div>
 
 <!-- ═══ TRABALHOS ═══ -->
 <div class="page" id="page-trabalhos">
-  <div class="page-blank">
-    <p class="page-name">Trabalhos</p>
-    <h2>Em breve</h2>
-    <p>O conteúdo desta página será adicionado em breve.</p>
-    <div class="dot-row">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+  <div class="trab-wrap">
+    <div class="trab-header">
+      <p class="trab-hint"><span class="trab-hint-prompt">// </span>drag to reorganize<span class="trab-hint-cursor">▌</span></p>
     </div>
+    <div class="trab-grid">
+
+      <!-- Card: Wi-Fi Grátis -->
+      <div class="trab-card" data-dest="proj-wifi">
+        <div class="trab-thumb">
+          <img src="imagens/wifi/capa.jpg" alt="Wi-Fi Grátis (ou intromissão)" />
+          <div class="trab-thumb-placeholder">
+            <span>capa-wifi.jpg</span>
+          </div>
+        </div>
+        <div class="trab-info">
+          <span class="trab-year">2025 – 26</span>
+          <p class="trab-title">Wi-Fi Grátis (ou intromissão)</p>
+        </div>
+      </div>
+
+      <!-- Card: Vestíveis Digitais -->
+      <div class="trab-card" data-dest="proj-vestiveis">
+        <div class="trab-thumb">
+          <img src="imagens/vestiveis/capa.jpg" alt="Vestíveis Digitais" />
+          <div class="trab-thumb-placeholder">
+            <span>imagens/vestiveis/capa.jpg</span>
+          </div>
+        </div>
+        <div class="trab-info">
+          <span class="trab-year">2024</span>
+          <p class="trab-title">Vestíveis Digitais</p>
+        </div>
+      </div>
+
+      <!-- Card: Mineral Data -->
+      <div class="trab-card" data-dest="proj-mineral">
+        <div class="trab-thumb">
+          <img src="imagens/mineral/capa.jpg" alt="Mineral Data" />
+          <div class="trab-thumb-placeholder">
+            <span>imagens/mineral/capa.jpg</span>
+          </div>
+        </div>
+        <div class="trab-info">
+          <span class="trab-year">2025</span>
+          <p class="trab-title">Mineral Data</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROJETO: Wi-Fi Grátis ═══ -->
+<div class="page proj-page" id="page-proj-wifi">
+
+  <!-- CAPA — tela inteira -->
+  <div class="proj-capa">
+    <img src="imagens/wifi/capa.jpg" alt="Wi-Fi Grátis (ou intromissão)"/>
+    <div class="proj-capa-placeholder"><span>imagens/wifi/capa.jpg</span></div>
+    <div class="proj-capa-overlay">
+      <div class="proj-capa-info">
+        <p class="proj-capa-label">Elvys Chaves &amp; Carlo Schiavini · 2025</p>
+        <h2 class="proj-capa-title">Wi-Fi Grátis<br/>(ou intromissão)</h2>
+      </div>
+      <div class="proj-capa-scroll">scroll ↓</div>
+    </div>
+  </div>
+
+  <div class="proj-wrap">
+
+    <button class="proj-back anim" onclick="navigate('trabalhos')">← Trabalhos</button>
+
+    <!-- Grid de imagens secundárias -->
+    <div class="proj-img-row3 anim">
+      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-02.jpg','Wi-Fi Grátis 02')">
+        <img src="imagens/wifi/wifi-02.jpg" alt="Wi-Fi Grátis 02"/>
+        <div class="proj-img-placeholder"><span>wifi-02.jpg</span></div>
+      </div>
+      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-03.jpg','Wi-Fi Grátis 03')">
+        <img src="imagens/wifi/wifi-03.jpg" alt="Wi-Fi Grátis 03"/>
+        <div class="proj-img-placeholder"><span>wifi-03.jpg</span></div>
+      </div>
+      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-04.jpg','Wi-Fi Grátis 04')">
+        <img src="imagens/wifi/wifi-04.jpg" alt="Wi-Fi Grátis 04"/>
+        <div class="proj-img-placeholder"><span>wifi-04.jpg</span></div>
+      </div>
+    </div>
+
+    <div class="proj-body anim">
+
+      <!-- Imagem lateral esquerda (desktop) -->
+      <div class="proj-img-col">
+        <div class="proj-img-tall lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-05.jpg','Wi-Fi Grátis 05')">
+          <img src="imagens/wifi/wifi-05.jpg" alt="Wi-Fi Grátis 05"/>
+          <div class="proj-img-placeholder"><span>wifi-05.jpg</span></div>
+        </div>
+      </div>
+
+      <div class="proj-side">
+
+        <!-- Descrição -->
+        <div class="proj-section">
+          <p class="proj-section-label">_descrição</p>
+          <p class="proj-text">A obra questiona a centralização dos espaços institucionais de arte e integra público e espaço urbano. Com materiais como Metalon e realidade aumentada, a instalação conecta o ambiente interno e externo do museu. Do lado de fora, uma câmera capta os transeuntes e ativa um vestível digital, tornando-os parte da obra. No interior, uma estrutura de ferro com LEDs exibe animações em glitch, propondo uma estética da falha e da reinvenção. Um roteador Wi-Fi aberto amplia a interação do público com a obra.</p>
+        </div>
+
+        <!-- Ficha técnica -->
+        <div class="proj-section">
+          <p class="proj-section-label">_ficha técnica</p>
+          <table class="proj-ficha">
+            <tr><td>Artistas</td><td>Elvys Chaves e Carlo Schiavini</td></tr>
+            <tr><td>Ano</td><td>2025</td></tr>
+            <tr><td>Técnica</td><td>Metalon, circuito eletrônico, Javascript, Realidade aumentada e animação 3D</td></tr>
+            <tr><td>Dimensões</td><td>3,30 × 1,30 × 2,30 m</td></tr>
+            <tr><td>Local</td><td>MAES — Museu de Arte do Espírito Santo, Vitória - ES</td></tr>
+            <tr><td>Curadoria</td><td>Clara Sampaio e Nicolas Soares</td></tr>
+          </table>
+        </div>
+
+        <!-- Link externo / vídeo -->
+        <div class="proj-section">
+          <p class="proj-section-label">_links</p>
+          <a class="proj-link" href="https://youtu.be/hPan7pLbzsg?si=vpsxNH-NtP_OaCFp&t=104" target="_blank">> assistir vídeo</a>
+          <a class="proj-link" href="#" target="_blank">> ver projeto online</a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Faixa final de imagens -->
+    <div class="proj-img-row2 anim" style="margin-top:1.5rem;">
+      <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-07.jpg','Wi-Fi Grátis 07')">
+        <img src="imagens/wifi/wifi-07.jpg" alt="Wi-Fi Grátis 07"/>
+        <div class="proj-img-placeholder"><span>wifi-07.jpg</span></div>
+      </div>
+      <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-08.jpg','Wi-Fi Grátis 08')">
+        <img src="imagens/wifi/wifi-08.jpg" alt="Wi-Fi Grátis 08"/>
+        <div class="proj-img-placeholder"><span>wifi-08.jpg</span></div>
+      </div>
+    </div>
+
+    <!-- Texto crítico — largura total -->
+    <div class="proj-critic-full anim">
+      <div class="proj-critic-header">
+        <div>
+          <p class="proj-section-label">_texto crítico</p>
+          <h3 class="proj-critic-title">INTROMISSÃO</h3>
+          <p class="proj-critic-author">escrito por Clara Sampaio</p>
+          <p class="proj-critic-contrib">Com a contribuição de Carlo Schiavini e Elvys Chaves.</p>
+          <p class="proj-critic-context">Texto realizado para instalação no Museu de Arte do Espírito Santo, durante o VIII Seminário Internacional Arte!Brasileiros, em Vitória, Brasil.</p>
+        </div>
+      </div>
+
+      <div class="proj-critic-columns">
+        <div class="proj-critic-col">
+          <p>"Wi-Fi Grátis" é uma frase familiar em boa parte dos centros urbanos, acompanhada de símbolos que se tornaram parte da linguagem visual contemporânea. Invisível, mas essencial, essa rede conecta pessoas, rompe barreiras físicas e redefine a maneira como o conhecimento e a participação se tornam possíveis. No contexto da obra proposta pelos artistas Carlo Schiavini e Elvys Chaves para o 8º Seminário Internacional Arte!Brasileiros em Vitória, porém, essa ligação se propõe como um gesto de "hackeamento", uma atitude que questiona as estruturas institucionais e a própria materialidade do objeto de arte.</p>
+          <p>Como podem os públicos estarem ainda mais ativos e engajados? Quais corpos são incluídos ou excluídos das instituições culturais? Partindo dessas questões, os artistas criam uma escultura que explora o deslocamento crítico entre dentro e fora, arte e público.</p>
+          <p>Posicionada na biblioteca do Museu de Arte do Espírito Santo (Maes) – um lugar simbólico do papel educativo da instituição – a obra estabelece um diálogo direto entre o espaço do museu, seu acervo e a cidade, acionado por transeuntes, que, por meio de uma câmera na fachada do museu, incorporam uma veste digital.</p>
+          <p>Por sua vez, dentro da biblioteca, imagens são construídas em diversas superfícies, televisores com "defeito", cujas particularidades de emissão de sinais e glitches compõem pictoricamente seu desenho. Em um deles é possível ver o modelo humano que gerou o elemento vestível: encontrado em um banco de dados, este corpo vazio, misterioso e sem cor, conecta-se aos seus semelhantes num espaço digital infinito: sem tempo, sem som, sem lugar.</p>
+        </div>
+        <div class="proj-critic-col">
+          <p>Essa fusão entre o corpo e a tecnologia, expõe a onipresença de sistemas que sobrepõem as dimensões do público e do privado, do indivíduo e do coletivo. É a partir dessa noção de rede, que não apenas une, mas também permite observar e codificar, recombinar e materializar, que este trabalho se situa.</p>
+          <p>A instalação se estrutura a partir de uma composição vazada em ferro, sustentando televisores, painéis e outros dispositivos, criando um ambiente que remete tanto à transparência quanto à exposição dos meios de comunicação e controle. Para os artistas, "a ferragem exposta não é um detalhe secundário, mas um elemento essencial para que a obra cumpra sua função crítica e conceitual. Ela evidencia os processos e materiais de construção e reafirma a necessidade de espaços artísticos mais abertos, acessíveis e transparentes."</p>
+          <p>Nesse embate entre corpo e tecnologia, a fusão entre o humano e a máquina se torna inevitável, e, como nos propõe Haraway "há prazer nessa confusão de fronteiras, mas deve haver responsabilidade nessa construção".<sup>1</sup> A obra não apenas materializa essa interseção, como também alerta para seus riscos, evidenciando os limites fluidos entre criação humana e artificial, presença e controle, autonomia e vigilância.</p>
+          <p>Essa experiência convoca as pessoas ao risco: o de serem capturadas, mesmo que momentaneamente, ainda do lado de fora — e instadas a entrar, se quiserem. "Wi-Fi Grátis" pretende cativar com seu aparente "lugar comum" e convidar a uma reflexão e uma percepção mais profunda das urgências que nos atravessam.</p>
+          <p>O atrevimento em disponibilizar uma rede de internet em uma instituição ainda sem esse serviço, entende tal questão como urgente, e o gesto como mote e obra. Insere o trabalho na longa tradição da desmaterialização do objeto artístico, mas reafirma sua atualidade ao ressignificar a presença e a democratização dos espaços institucionais. No cruzamento entre tecnologia e estética, questiona-se não apenas o que significa estar conectado, mas para quem essa possibilidade realmente está aberta.</p>
+          <p class="proj-critic-note"><sup>1</sup> Haraway, Donna J. <em>Manifesto Ciborgue. O Manifesto das Espécies de Companhia.</em> Tradução de Ana Maria Chaves. Lisboa: Orfeu Negro, 2022.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PROJETO: Mineral Data ═══ -->
+<div class="page proj-page" id="page-proj-mineral">
+
+  <!-- CAPA — tela inteira -->
+  <div class="proj-capa">
+    <img src="imagens/mineral/capa.jpg" alt="Mineral Data"/>
+    <div class="proj-capa-placeholder"><span>imagens/mineral/capa.jpg</span></div>
+    <div class="proj-capa-overlay">
+      <div class="proj-capa-info">
+        <p class="proj-capa-label">Elvys Chaves · 2025</p>
+        <h2 class="proj-capa-title">Mineral Data</h2>
+      </div>
+      <div class="proj-capa-scroll">scroll ↓</div>
+    </div>
+  </div>
+
+  <div class="proj-wrap">
+
+    <button class="proj-back anim" onclick="navigate('trabalhos')">← Trabalhos</button>
+
+    <!-- Grid de imagens secundárias -->
+    <div class="proj-img-row3 anim">
+      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/mineral/mineral-02.jpg','Mineral Data 02')">
+        <img src="imagens/mineral/mineral-02.jpg" alt="Mineral Data 02"/>
+        <div class="proj-img-placeholder"><span>mineral-02.jpg</span></div>
+      </div>
+      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/mineral/mineral-03.jpg','Mineral Data 03')">
+        <img src="imagens/mineral/mineral-03.jpg" alt="Mineral Data 03"/>
+        <div class="proj-img-placeholder"><span>mineral-03.jpg</span></div>
+      </div>
+      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/mineral/mineral-04.jpg','Mineral Data 04')">
+        <img src="imagens/mineral/mineral-04.jpg" alt="Mineral Data 04"/>
+        <div class="proj-img-placeholder"><span>mineral-04.jpg</span></div>
+      </div>
+    </div>
+
+    <!-- Ficha técnica + imagem lateral -->
+    <div class="proj-body anim">
+
+      <!-- Imagem lateral esquerda (desktop) -->
+      <div class="proj-img-col">
+        <div class="proj-img-tall lightbox-trigger" onclick="openLightbox('imagens/mineral/mineral-05.jpg','Mineral Data 05')">
+          <img src="imagens/mineral/mineral-05.jpg" alt="Mineral Data 05"/>
+          <div class="proj-img-placeholder"><span>mineral-05.jpg</span></div>
+        </div>
+      </div>
+
+      <!-- Ficha técnica -->
+      <div class="proj-ficha">
+        <p class="proj-section-label">_ficha técnica</p>
+        <table class="proj-table">
+          <tr><td class="proj-td-key">Título</td><td>Mineral Data</td></tr>
+          <tr><td class="proj-td-key">Artista</td><td>Elvys Chaves</td></tr>
+          <tr><td class="proj-td-key">Ano</td><td>2025</td></tr>
+          <tr><td class="proj-td-key">Técnica</td><td>—</td></tr>
+          <tr><td class="proj-td-key">Dimensões</td><td>—</td></tr>
+        </table>
+
+        <!-- Links -->
+        <div class="proj-section" style="margin-top:1.5rem;">
+          <p class="proj-section-label">_links</p>
+          <a class="proj-link" href="#" target="_blank">> assistir vídeo</a>
+          <a class="proj-link" href="#" target="_blank">> ver projeto online</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Descrição do projeto -->
+    <div class="proj-critic-full anim">
+      <p class="proj-section-label">_descrição</p>
+      <p style="color:var(--muted); font-size:.9rem; line-height:1.8;">Descrição do projeto será adicionada em breve.</p>
+    </div>
+
+    <!-- Faixa final de imagens -->
+    <div class="proj-img-row2 anim" style="margin-top:1.5rem;">
+      <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/mineral/mineral-07.jpg','Mineral Data 07')">
+        <img src="imagens/mineral/mineral-07.jpg" alt="Mineral Data 07"/>
+        <div class="proj-img-placeholder"><span>mineral-07.jpg</span></div>
+      </div>
+      <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/mineral/mineral-08.jpg','Mineral Data 08')">
+        <img src="imagens/mineral/mineral-08.jpg" alt="Mineral Data 08"/>
+        <div class="proj-img-placeholder"><span>mineral-08.jpg</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PROJETO: Vestíveis Digitais ═══ -->
+<div class="page proj-page" id="page-proj-vestiveis">
+
+  <!-- CAPA — tela inteira -->
+  <div class="proj-capa">
+    <img src="imagens/vestiveis/capa.jpg" alt="Vestíveis Digitais"/>
+    <div class="proj-capa-placeholder"><span>imagens/vestiveis/capa.jpg</span></div>
+    <div class="proj-capa-overlay">
+      <div class="proj-capa-info">
+        <p class="proj-capa-label">Elvys Chaves · 2024</p>
+        <h2 class="proj-capa-title">Vestíveis Digitais</h2>
+      </div>
+      <div class="proj-capa-scroll">scroll ↓</div>
+    </div>
+  </div>
+
+  <div class="proj-wrap">
+
+    <button class="proj-back anim" onclick="navigate('trabalhos')">← Trabalhos</button>
+
+    <!-- Grid de imagens secundárias -->
+    <div class="proj-img-row3 anim">
+      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/vestiveis/vestiveis-02.jpg','Vestíveis Digitais 02')">
+        <img src="imagens/vestiveis/vestiveis-02.jpg" alt="Vestíveis Digitais 02"/>
+        <div class="proj-img-placeholder"><span>vestiveis-02.jpg</span></div>
+      </div>
+      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/vestiveis/vestiveis-03.jpg','Vestíveis Digitais 03')">
+        <img src="imagens/vestiveis/vestiveis-03.jpg" alt="Vestíveis Digitais 03"/>
+        <div class="proj-img-placeholder"><span>vestiveis-03.jpg</span></div>
+      </div>
+      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/vestiveis/vestiveis-04.jpg','Vestíveis Digitais 04')">
+        <img src="imagens/vestiveis/vestiveis-04.jpg" alt="Vestíveis Digitais 04"/>
+        <div class="proj-img-placeholder"><span>vestiveis-04.jpg</span></div>
+      </div>
+    </div>
+
+    <!-- Ficha técnica + imagem lateral -->
+    <div class="proj-body anim">
+
+      <div class="proj-img-col">
+        <div class="proj-img-tall lightbox-trigger" onclick="openLightbox('imagens/vestiveis/vestiveis-05.jpg','Vestíveis Digitais 05')">
+          <img src="imagens/vestiveis/vestiveis-05.jpg" alt="Vestíveis Digitais 05"/>
+          <div class="proj-img-placeholder"><span>vestiveis-05.jpg</span></div>
+        </div>
+      </div>
+
+      <div class="proj-ficha">
+        <p class="proj-section-label">_ficha técnica</p>
+        <table class="proj-table">
+          <tr><td class="proj-td-key">Título</td><td>Vestíveis Digitais</td></tr>
+          <tr><td class="proj-td-key">Artista</td><td>Elvys Chaves</td></tr>
+          <tr><td class="proj-td-key">Ano</td><td>2024</td></tr>
+          <tr><td class="proj-td-key">Técnica</td><td>—</td></tr>
+          <tr><td class="proj-td-key">Dimensões</td><td>—</td></tr>
+        </table>
+
+        <div class="proj-section" style="margin-top:1.5rem;">
+          <p class="proj-section-label">_links</p>
+          <a class="proj-link" href="#" target="_blank">> assistir vídeo</a>
+          <a class="proj-link" href="#" target="_blank">> ver projeto online</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Descrição -->
+    <div class="proj-critic-full anim">
+      <p class="proj-section-label">_descrição</p>
+      <p style="color:var(--muted); font-size:.9rem; line-height:1.8;">Descrição do projeto será adicionada em breve.</p>
+    </div>
+
+    <!-- Faixa final de imagens -->
+    <div class="proj-img-row2 anim" style="margin-top:1.5rem;">
+      <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/vestiveis/vestiveis-07.jpg','Vestíveis Digitais 07')">
+        <img src="imagens/vestiveis/vestiveis-07.jpg" alt="Vestíveis Digitais 07"/>
+        <div class="proj-img-placeholder"><span>vestiveis-07.jpg</span></div>
+      </div>
+      <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/vestiveis/vestiveis-08.jpg','Vestíveis Digitais 08')">
+        <img src="imagens/vestiveis/vestiveis-08.jpg" alt="Vestíveis Digitais 08"/>
+        <div class="proj-img-placeholder"><span>vestiveis-08.jpg</span></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -761,10 +1750,15 @@
   </div>
 </div>
 
-<footer>© 2026 Elvys Chaves</footer>
+
+<!-- ─── LIGHTBOX ─── -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()"/>
+</div>
 
 <script>
-  const pages = ['home', 'sobre', 'trabalhos', 'publicacoes', 'contato'];
+  const pages = ['home', 'sobre', 'trabalhos', 'publicacoes', 'contato', 'proj-wifi', 'proj-mineral', 'proj-vestiveis'];
   const navIds = ['sobre', 'trabalhos', 'publicacoes', 'contato'];
 
   function navigate(id) {
@@ -791,14 +1785,68 @@
     // Show/hide nav bar
     if (id === 'home') {
       document.body.classList.remove('secondary');
+      document.body.classList.add('on-home');
     } else {
       document.body.classList.add('secondary');
+      document.body.classList.remove('on-home');
+    }
+
+    // Re-espalha cards toda vez que Trabalhos abre
+    if (id === 'trabalhos') {
+      requestAnimationFrame(scatterCards);
     }
 
     // Update hash
     window.location.hash = id === 'home' ? '' : id;
-    window.scrollTo(0, 0);
+    // Reset scroll — proj-pages têm scroll próprio
+    const projPage = document.getElementById('page-' + id);
+    if (projPage && projPage.classList.contains('proj-page')) {
+      projPage.scrollTop = 0;
+    } else {
+      window.scrollTo(0, 0);
+    }
   }
+
+  // Animações de entrada (IntersectionObserver no scroll do proj-page)
+  function initProjAnimations() {
+    ['page-proj-wifi', 'page-proj-mineral', 'page-proj-vestiveis'].forEach(function(pageId) {
+      const projPage = document.getElementById(pageId);
+      if (!projPage) return;
+      const elems = projPage.querySelectorAll('.anim');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { root: projPage, threshold: 0.12 });
+      elems.forEach(el => observer.observe(el));
+    });
+  }
+  initProjAnimations();
+
+  // Mobile menu
+  function toggleMobileMenu() {
+    const dd = document.getElementById('mobile-dropdown');
+    dd.classList.toggle('open');
+  }
+
+  function mobileNavigate(id) {
+    document.getElementById('mobile-dropdown').classList.remove('open');
+    // update mobile nav active
+    ['trabalhos','publicacoes','sobre','contato'].forEach(n => {
+      const el = document.getElementById('mnav-' + n);
+      if (el) el.classList.remove('active');
+    });
+    const mel = document.getElementById('mnav-' + id);
+    if (mel) mel.classList.add('active');
+    navigate(id);
+  }
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    const dd = document.getElementById('mobile-dropdown');
+    const btn = document.getElementById('dots-btn');
+    if (dd && btn && !dd.contains(e.target) && !btn.contains(e.target)) {
+      dd.classList.remove('open');
+    }
+  });
 
   // Contact form
   function handleSubmit(e) {
@@ -820,6 +1868,173 @@
       e.target.reset();
     }, 3000);
   }
+
+  // ─── DRAGGABLE CARDS (Trabalhos) ───
+  const CARD_W = 260;
+  const CARD_H = 230; // largura × 3/4 thumb + info bar ≈ 230px
+  const CARD_GAP = 30; // espaço mínimo entre cards
+
+  function isMobileLayout() {
+    return window.innerHeight > window.innerWidth;
+  }
+
+  function scatterCards() {
+    const grid = document.querySelector('.trab-grid');
+    if (!grid) return;
+    const W = grid.offsetWidth;
+    if (W < 10) return;
+
+    const cards  = Array.from(grid.querySelectorAll('.trab-card'));
+    const n      = cards.length;
+    if (n === 0) return;
+
+    // Largura real do card (pode variar no mobile via CSS)
+    const cW = cards[0].offsetWidth || CARD_W;
+    const cH = CARD_H;
+
+    // Quantos cards cabem horizontalmente (mín 1)
+    const cols = Math.max(1, Math.floor((W - 10) / (cW + CARD_GAP)));
+
+    // Altura mínima do canvas: linhas necessárias × altura do card, com folga generosa
+    const rows   = Math.ceil(n / cols);
+    const minH   = rows * (cH + CARD_GAP + 40) + 80;
+    const canvasH = Math.max(window.innerHeight - 180, minH);
+
+    // Aplica altura para habilitar scroll quando necessário
+    grid.style.height = canvasH + 'px';
+
+    const placed = [];
+    const maxZ   = n;
+
+    cards.forEach((card, i) => {
+      let x, y, ok, attempts = 0;
+
+      do {
+        ok = true;
+
+        // Distribui em faixas verticais para garantir espalhamento suave
+        const band     = Math.floor(i / cols);           // faixa vertical
+        const bandH    = canvasH / Math.ceil(n / cols);
+        const bandTopY = band * bandH;
+
+        // Posição aleatória dentro da faixa, com bias central horizontal
+        const maxX = Math.max(0, W - cW - 10);
+        const cx   = maxX / 2;
+        const rx2  = (Math.random() + Math.random()) / 2 - 0.5;
+        x = Math.round(cx + rx2 * maxX);
+        x = Math.max(5, Math.min(maxX, x));
+
+        y = Math.round(bandTopY + Math.random() * (bandH - cH - 20) + 10);
+        y = Math.max(5, Math.min(canvasH - cH - 5, y));
+
+        // Verifica sobreposição
+        for (const p of placed) {
+          if (Math.abs(p.x - x) < cW + CARD_GAP &&
+              Math.abs(p.y - y) < cH + CARD_GAP) {
+            ok = false;
+            break;
+          }
+        }
+        attempts++;
+      } while (!ok && attempts < 300);
+
+      placed.push({ x, y });
+      card.style.left   = x + 'px';
+      card.style.top    = y + 'px';
+      card.style.zIndex = maxZ - i; // mais recente na frente
+    });
+  }
+
+  function initDraggableCards() {
+    const grid = document.querySelector('.trab-grid');
+    if (!grid) return;
+
+    grid.querySelectorAll('.trab-card').forEach(card => {
+      const dest = card.dataset.dest;
+
+      // ── Mouse ──
+      card.addEventListener('mousedown', function(e) {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        const cards = Array.from(grid.querySelectorAll('.trab-card'));
+        const startX    = e.clientX;
+        const startY    = e.clientY;
+        const startLeft = parseInt(card.style.left) || 0;
+        const startTop  = parseInt(card.style.top)  || 0;
+        let dragged = false;
+
+        cards.forEach(c => c.style.zIndex = 1);
+        card.style.zIndex = 100;
+        card.classList.add('is-dragging');
+
+        function onMove(e) {
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          if (Math.abs(dx) > 5 || Math.abs(dy) > 5) dragged = true;
+          card.style.left = (startLeft + dx) + 'px';
+          card.style.top  = (startTop  + dy) + 'px';
+        }
+        function onUp() {
+          card.classList.remove('is-dragging');
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          if (!dragged && dest) navigate(dest);
+        }
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+
+      // ── Touch ──
+      let tStartX, tStartY, tLeft, tTop, tDragged;
+      card.addEventListener('touchstart', function(e) {
+        const t = e.touches[0];
+        tStartX = t.clientX; tStartY = t.clientY;
+        tLeft   = parseInt(card.style.left) || 0;
+        tTop    = parseInt(card.style.top)  || 0;
+        tDragged = false;
+        const cards = Array.from(grid.querySelectorAll('.trab-card'));
+        cards.forEach(c => c.style.zIndex = 1);
+        card.style.zIndex = 100;
+        card.classList.add('is-dragging');
+      }, { passive: true });
+
+      card.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        const t = e.touches[0];
+        const dx = t.clientX - tStartX;
+        const dy = t.clientY - tStartY;
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) tDragged = true;
+        card.style.left = (tLeft + dx) + 'px';
+        card.style.top  = (tTop  + dy) + 'px';
+      }, { passive: false });
+
+      card.addEventListener('touchend', function() {
+        card.classList.remove('is-dragging');
+        if (!tDragged && dest) navigate(dest);
+      });
+    });
+  }
+  initDraggableCards();
+
+  // ─── LIGHTBOX ───
+  function openLightbox(src, alt) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = src;
+    img.alt = alt || '';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    const lb = document.getElementById('lightbox');
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
 
   // Handle back/forward and direct URL access
   window.addEventListener('hashchange', () => {
