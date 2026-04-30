@@ -379,6 +379,9 @@
       transition: none;
       z-index: 100;
     }
+    .trab-card.auto-moving {
+      transition: left .9s cubic-bezier(.4,0,.2,1), top .9s cubic-bezier(.4,0,.2,1), border-color .25s, box-shadow .25s, opacity .2s;
+    }
 
     .trab-thumb {
       aspect-ratio: 4/3;
@@ -394,6 +397,18 @@
       position: relative; z-index: 1;
     }
 
+    /* picture preenche o thumb igual a img direta */
+    .trab-thumb picture {
+      display: block;
+      width: 100%; height: 100%;
+      position: relative; z-index: 1;
+    }
+    .trab-thumb picture img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     /* Placeholder visível quando img não carrega */
     .trab-thumb-placeholder {
       position: absolute; inset: 0; z-index: 0;
@@ -404,6 +419,7 @@
       font-size: .7rem; color: var(--muted);
     }
     .trab-thumb img[src] ~ .trab-thumb-placeholder { display: none; }
+    .trab-thumb picture ~ .trab-thumb-placeholder { display: none; }
 
     .trab-info {
       padding: .85rem 1rem;
@@ -638,6 +654,87 @@
     .proj-img-row3 .proj-img-thumb:nth-child(3) { transition-delay: .2s; }
     .proj-img-row2 .proj-img-wide:nth-child(1)  { transition-delay: .0s; }
     .proj-img-row2 .proj-img-wide:nth-child(2)  { transition-delay: .15s; }
+
+    /* ─── SEÇÃO FOTOGRÁFICA ─── */
+    .proj-photo-section { margin-top: 3.5rem; }
+    .proj-photo-header {
+      display: flex; align-items: baseline; gap: 1rem;
+      padding-bottom: .7rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    .proj-photo-title {
+      font-size: .8rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+    }
+    .proj-photo-credit {
+      font-family: 'Courier New', monospace;
+      font-size: .72rem; color: var(--muted);
+    }
+
+    /* Figura individual: imagem + crédito abaixo */
+    .proj-fig {
+      display: flex;
+      flex-direction: column;
+    }
+    .proj-fig-credit {
+      font-family: 'Courier New', monospace;
+      font-size: .66rem;
+      color: var(--muted);
+      margin-top: .28rem;
+      line-height: 1.3;
+    }
+    /* Quando hero está dentro de proj-fig, remove margin-bottom próprio */
+    .proj-fig .proj-img-hero { margin-bottom: 0; }
+    /* Linha mista: portrait + landscape lado a lado */
+    .proj-img-row-feat {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: .8rem; margin-bottom: .8rem;
+    }
+    .proj-img-portrait {
+      aspect-ratio: 2/3;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .proj-img-portrait img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      position: relative; z-index: 1;
+    }
+    .proj-img-row-feat .proj-img-wide { margin-bottom: 0; }
+    @media (orientation: portrait), (max-aspect-ratio: 1/1) {
+      .proj-img-row-feat { grid-template-columns: 1fr; }
+    }
+    /* Imagem hero — largura total, proporção cinemática */
+    .proj-img-hero {
+      aspect-ratio: 16/7;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      margin-bottom: .8rem;
+    }
+    .proj-img-hero img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      position: relative; z-index: 1;
+    }
+    /* Imagem destacada — 2/3 da largura, centrada */
+    .proj-img-featured {
+      width: 66%;
+      aspect-ratio: 3/2;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      margin: 0 auto .8rem;
+    }
+    .proj-img-featured img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      position: relative; z-index: 1;
+    }
+    /* Espaçamento entre linhas de fotos */
+    .proj-photo-section > * + * { margin-top: .8rem; }
+    .proj-photo-section .proj-img-row3,
+    .proj-photo-section .proj-img-row2 { margin-bottom: 0; }
+    @media (orientation: portrait), (max-aspect-ratio: 1/1) {
+      .proj-img-featured { width: 100%; }
+    }
 
     /* ─── PARALLAX COVER (Wi-Fi + Mineral Data) ─── */
     #page-proj-vestiveis .proj-capa img {
@@ -1340,7 +1437,11 @@
       <!-- Card: Wi-Fi Grátis -->
       <div class="trab-card" data-dest="proj-wifi">
         <div class="trab-thumb">
-          <img src="imagens/wifi/capa.jpg" alt="Wi-Fi Grátis (ou intromissão)" />
+          <picture>
+            <source media="(orientation: portrait), (max-aspect-ratio: 1/1)"
+                    srcset="imagens/wifi/capa-mobile.jpg" />
+            <img src="imagens/wifi/capa.jpg" alt="Wi-Fi Grátis (ou intromissão)" />
+          </picture>
           <div class="trab-thumb-placeholder">
             <span>capa-wifi.jpg</span>
           </div>
@@ -1354,7 +1455,11 @@
       <!-- Card: Vestíveis Digitais -->
       <div class="trab-card" data-dest="proj-vestiveis">
         <div class="trab-thumb">
-          <img src="imagens/vestiveis/capa.jpg" alt="Vestíveis Digitais" />
+          <picture>
+            <source media="(orientation: portrait), (max-aspect-ratio: 1/1)"
+                    srcset="imagens/vestiveis/capa-mobile.jpg" />
+            <img src="imagens/vestiveis/capa.jpg" alt="Vestíveis Digitais" />
+          </picture>
           <div class="trab-thumb-placeholder">
             <span>imagens/vestiveis/capa.jpg</span>
           </div>
@@ -1368,7 +1473,11 @@
       <!-- Card: Mineral Data -->
       <div class="trab-card" data-dest="proj-mineral">
         <div class="trab-thumb">
-          <img src="imagens/mineral/capa.jpg" alt="Mineral Data" />
+          <picture>
+            <source media="(orientation: portrait), (max-aspect-ratio: 1/1)"
+                    srcset="imagens/mineral/capa-mobile.jpg" />
+            <img src="imagens/mineral/capa.jpg" alt="Mineral Data" />
+          </picture>
           <div class="trab-thumb-placeholder">
             <span>imagens/mineral/capa.jpg</span>
           </div>
@@ -1403,41 +1512,91 @@
 
     <button class="proj-back anim" onclick="navigate('trabalhos')">← Trabalhos</button>
 
-    <!-- Grid de imagens secundárias -->
-    <div class="proj-img-row3 anim">
-      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-02.jpg','Wi-Fi Grátis 02')">
-        <img src="imagens/wifi/wifi-02.jpg" alt="Wi-Fi Grátis 02"/>
-        <div class="proj-img-placeholder"><span>wifi-02.jpg</span></div>
+    <!-- ══ SEÇÃO 1: Obra — Elvys Chaves (logo após a capa) ══ -->
+    <div class="proj-photo-section">
+      <div class="proj-photo-header anim">
+        <span class="proj-photo-title">Obra</span>
       </div>
-      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-03.jpg','Wi-Fi Grátis 03')">
-        <img src="imagens/wifi/wifi-03.jpg" alt="Wi-Fi Grátis 03"/>
-        <div class="proj-img-placeholder"><span>wifi-03.jpg</span></div>
+
+      <!-- wifi-23: hero cinematográfico -->
+      <div class="proj-fig anim">
+        <div class="proj-img-hero lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-23.jpg','Obra 23')">
+          <img src="imagens/wifi/wifi-23.jpg" alt="Obra 23"/>
+          <div class="proj-img-placeholder"><span>wifi-23.jpg</span></div>
+        </div>
+        <p class="proj-fig-credit">Foto: Elvys Chaves</p>
       </div>
-      <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-04.jpg','Wi-Fi Grátis 04')">
-        <img src="imagens/wifi/wifi-04.jpg" alt="Wi-Fi Grátis 04"/>
-        <div class="proj-img-placeholder"><span>wifi-04.jpg</span></div>
+
+      <!-- wifi-24 + wifi-25: duas médias -->
+      <div class="proj-img-row2 anim">
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-24.jpg','Obra 24')">
+            <img src="imagens/wifi/wifi-24.jpg" alt="Obra 24"/>
+            <div class="proj-img-placeholder"><span>wifi-24.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-25.jpg','Obra 25')">
+            <img src="imagens/wifi/wifi-25.jpg" alt="Obra 25"/>
+            <div class="proj-img-placeholder"><span>wifi-25.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+      </div>
+
+      <!-- wifi-26 + wifi-27 + wifi-28: três pequenas -->
+      <div class="proj-img-row3 anim">
+        <div class="proj-fig">
+          <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-26.jpg','Obra 26')">
+            <img src="imagens/wifi/wifi-26.jpg" alt="Obra 26"/>
+            <div class="proj-img-placeholder"><span>wifi-26.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-27.jpg','Obra 27')">
+            <img src="imagens/wifi/wifi-27.jpg" alt="Obra 27"/>
+            <div class="proj-img-placeholder"><span>wifi-27.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-28.jpg','Obra 28')">
+            <img src="imagens/wifi/wifi-28.jpg" alt="Obra 28"/>
+            <div class="proj-img-placeholder"><span>wifi-28.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+      </div>
+
+      <!-- wifi-29: largura total -->
+      <div class="proj-fig anim">
+        <div class="proj-img-hero lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-29.jpg','Obra 29')">
+          <img src="imagens/wifi/wifi-29.jpg" alt="Obra 29"/>
+          <div class="proj-img-placeholder"><span>wifi-29.jpg</span></div>
+        </div>
+        <p class="proj-fig-credit">Foto: Elvys Chaves</p>
       </div>
     </div>
 
+    <!-- ══ Ficha técnica + imagem lateral ══ -->
     <div class="proj-body anim">
 
-      <!-- Imagem lateral esquerda (desktop) -->
       <div class="proj-img-col">
         <div class="proj-img-tall lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-05.jpg','Wi-Fi Grátis 05')">
           <img src="imagens/wifi/wifi-05.jpg" alt="Wi-Fi Grátis 05"/>
           <div class="proj-img-placeholder"><span>wifi-05.jpg</span></div>
         </div>
+        <p class="proj-fig-credit">Foto: Melina Furlan</p>
       </div>
 
       <div class="proj-side">
-
-        <!-- Descrição -->
         <div class="proj-section">
           <p class="proj-section-label">_descrição</p>
           <p class="proj-text">A obra questiona a centralização dos espaços institucionais de arte e integra público e espaço urbano. Com materiais como Metalon e realidade aumentada, a instalação conecta o ambiente interno e externo do museu. Do lado de fora, uma câmera capta os transeuntes e ativa um vestível digital, tornando-os parte da obra. No interior, uma estrutura de ferro com LEDs exibe animações em glitch, propondo uma estética da falha e da reinvenção. Um roteador Wi-Fi aberto amplia a interação do público com a obra.</p>
         </div>
 
-        <!-- Ficha técnica -->
         <div class="proj-section">
           <p class="proj-section-label">_ficha técnica</p>
           <table class="proj-ficha">
@@ -1447,29 +1606,101 @@
             <tr><td>Dimensões</td><td>3,30 × 1,30 × 2,30 m</td></tr>
             <tr><td>Local</td><td>MAES — Museu de Arte do Espírito Santo, Vitória - ES</td></tr>
             <tr><td>Curadoria</td><td>Clara Sampaio e Nicolas Soares</td></tr>
+            <tr><td>Serralheria</td><td>Alcenir Chaves</td></tr>
           </table>
         </div>
 
-        <!-- Link externo / vídeo -->
         <div class="proj-section">
           <p class="proj-section-label">_links</p>
           <a class="proj-link" href="https://youtu.be/hPan7pLbzsg?si=vpsxNH-NtP_OaCFp&t=104" target="_blank">> assistir vídeo</a>
-          <a class="proj-link" href="#" target="_blank">> ver projeto online</a>
         </div>
-
       </div>
 
     </div>
 
-    <!-- Faixa final de imagens -->
-    <div class="proj-img-row2 anim" style="margin-top:1.5rem;">
-      <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-07.jpg','Wi-Fi Grátis 07')">
-        <img src="imagens/wifi/wifi-07.jpg" alt="Wi-Fi Grátis 07"/>
-        <div class="proj-img-placeholder"><span>wifi-07.jpg</span></div>
+    <!-- ══ SEÇÃO 2: Realidade Aumentada — Elvys Chaves ══ -->
+    <div class="proj-photo-section">
+      <div class="proj-photo-header anim">
+        <span class="proj-photo-title">Realidade Aumentada</span>
       </div>
-      <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-08.jpg','Wi-Fi Grátis 08')">
-        <img src="imagens/wifi/wifi-08.jpg" alt="Wi-Fi Grátis 08"/>
-        <div class="proj-img-placeholder"><span>wifi-08.jpg</span></div>
+
+      <!-- wifi-14: hero -->
+      <div class="proj-fig anim">
+        <div class="proj-img-hero lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-14.jpg','RA 14')">
+          <img src="imagens/wifi/wifi-14.jpg" alt="RA 14"/>
+          <div class="proj-img-placeholder"><span>wifi-14.jpg</span></div>
+        </div>
+        <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+      </div>
+
+      <!-- wifi-15 + wifi-16: dois médios -->
+      <div class="proj-img-row2 anim">
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-15.jpg','RA 15')">
+            <img src="imagens/wifi/wifi-15.jpg" alt="RA 15"/>
+            <div class="proj-img-placeholder"><span>wifi-15.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-16.jpg','RA 16')">
+            <img src="imagens/wifi/wifi-16.jpg" alt="RA 16"/>
+            <div class="proj-img-placeholder"><span>wifi-16.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+      </div>
+
+      <!-- wifi-17 + wifi-18 + wifi-19: três pequenas -->
+      <div class="proj-img-row3 anim">
+        <div class="proj-fig">
+          <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-17.jpg','RA 17')">
+            <img src="imagens/wifi/wifi-17.jpg" alt="RA 17"/>
+            <div class="proj-img-placeholder"><span>wifi-17.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-18.jpg','RA 18')">
+            <img src="imagens/wifi/wifi-18.jpg" alt="RA 18"/>
+            <div class="proj-img-placeholder"><span>wifi-18.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-19.jpg','RA 19')">
+            <img src="imagens/wifi/wifi-19.jpg" alt="RA 19"/>
+            <div class="proj-img-placeholder"><span>wifi-19.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+      </div>
+
+      <!-- wifi-20: largura total -->
+      <div class="proj-fig anim">
+        <div class="proj-img-hero lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-20.jpg','RA 20')">
+          <img src="imagens/wifi/wifi-20.jpg" alt="RA 20"/>
+          <div class="proj-img-placeholder"><span>wifi-20.jpg</span></div>
+        </div>
+        <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+      </div>
+
+      <!-- wifi-21 + wifi-22: dois médios -->
+      <div class="proj-img-row2 anim">
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-21.jpg','RA 21')">
+            <img src="imagens/wifi/wifi-21.jpg" alt="RA 21"/>
+            <div class="proj-img-placeholder"><span>wifi-21.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-22.jpg','RA 22')">
+            <img src="imagens/wifi/wifi-22.jpg" alt="RA 22"/>
+            <div class="proj-img-placeholder"><span>wifi-22.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Elvys Chaves</p>
+        </div>
       </div>
     </div>
 
@@ -1499,6 +1730,101 @@
           <p>Essa experiência convoca as pessoas ao risco: o de serem capturadas, mesmo que momentaneamente, ainda do lado de fora — e instadas a entrar, se quiserem. "Wi-Fi Grátis" pretende cativar com seu aparente "lugar comum" e convidar a uma reflexão e uma percepção mais profunda das urgências que nos atravessam.</p>
           <p>O atrevimento em disponibilizar uma rede de internet em uma instituição ainda sem esse serviço, entende tal questão como urgente, e o gesto como mote e obra. Insere o trabalho na longa tradição da desmaterialização do objeto artístico, mas reafirma sua atualidade ao ressignificar a presença e a democratização dos espaços institucionais. No cruzamento entre tecnologia e estética, questiona-se não apenas o que significa estar conectado, mas para quem essa possibilidade realmente está aberta.</p>
           <p class="proj-critic-note"><sup>1</sup> Haraway, Donna J. <em>Manifesto Ciborgue. O Manifesto das Espécies de Companhia.</em> Tradução de Ana Maria Chaves. Lisboa: Orfeu Negro, 2022.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SEÇÃO 3: Abertura — Melina Furlan ══ -->
+    <div class="proj-photo-section">
+      <div class="proj-photo-header anim">
+        <span class="proj-photo-title">Abertura</span>
+      </div>
+
+      <!-- wifi-04 (vertical) + wifi-03 (wide) em destaque -->
+      <div class="proj-img-row-feat anim">
+        <div class="proj-fig">
+          <div class="proj-img-portrait lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-04.jpg','Abertura 04')">
+            <img src="imagens/wifi/wifi-04.jpg" alt="Abertura 04"/>
+            <div class="proj-img-placeholder"><span>wifi-04.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Melina Furlan</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-03.jpg','Abertura 03')">
+            <img src="imagens/wifi/wifi-03.jpg" alt="Abertura 03"/>
+            <div class="proj-img-placeholder"><span>wifi-03.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Melina Furlan</p>
+        </div>
+      </div>
+
+      <!-- wifi-06 + wifi-07: dois médios -->
+      <div class="proj-img-row2 anim">
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-06.jpg','Abertura 06')">
+            <img src="imagens/wifi/wifi-06.jpg" alt="Abertura 06"/>
+            <div class="proj-img-placeholder"><span>wifi-06.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Melina Furlan</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-07.jpg','Abertura 07')">
+            <img src="imagens/wifi/wifi-07.jpg" alt="Abertura 07"/>
+            <div class="proj-img-placeholder"><span>wifi-07.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Melina Furlan</p>
+        </div>
+      </div>
+
+      <!-- wifi-08: hero -->
+      <div class="proj-fig anim">
+        <div class="proj-img-hero lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-08.jpg','Abertura 08')">
+          <img src="imagens/wifi/wifi-08.jpg" alt="Abertura 08"/>
+          <div class="proj-img-placeholder"><span>wifi-08.jpg</span></div>
+        </div>
+        <p class="proj-fig-credit">Foto: Melina Furlan</p>
+      </div>
+
+      <!-- wifi-09 + wifi-10 + wifi-11: três pequenas -->
+      <div class="proj-img-row3 anim">
+        <div class="proj-fig">
+          <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-09.jpg','Abertura 09')">
+            <img src="imagens/wifi/wifi-09.jpg" alt="Abertura 09"/>
+            <div class="proj-img-placeholder"><span>wifi-09.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Melina Furlan</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-10.jpg','Abertura 10')">
+            <img src="imagens/wifi/wifi-10.jpg" alt="Abertura 10"/>
+            <div class="proj-img-placeholder"><span>wifi-10.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Melina Furlan</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-thumb lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-11.jpg','Abertura 11')">
+            <img src="imagens/wifi/wifi-11.jpg" alt="Abertura 11"/>
+            <div class="proj-img-placeholder"><span>wifi-11.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Melina Furlan</p>
+        </div>
+      </div>
+
+      <!-- wifi-12 + wifi-13: dois médios finais -->
+      <div class="proj-img-row2 anim">
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-12.jpg','Abertura 12')">
+            <img src="imagens/wifi/wifi-12.jpg" alt="Abertura 12"/>
+            <div class="proj-img-placeholder"><span>wifi-12.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Melina Furlan</p>
+        </div>
+        <div class="proj-fig">
+          <div class="proj-img-wide lightbox-trigger" onclick="openLightbox('imagens/wifi/wifi-13.jpg','Abertura 13')">
+            <img src="imagens/wifi/wifi-13.jpg" alt="Abertura 13"/>
+            <div class="proj-img-placeholder"><span>wifi-13.jpg</span></div>
+          </div>
+          <p class="proj-fig-credit">Foto: Melina Furlan</p>
         </div>
       </div>
     </div>
@@ -1791,9 +2117,11 @@
       document.body.classList.remove('on-home');
     }
 
-    // Re-espalha cards toda vez que Trabalhos abre
+    // Re-espalha cards toda vez que Trabalhos abre e inicia timer
     if (id === 'trabalhos') {
-      requestAnimationFrame(scatterCards);
+      requestAnimationFrame(() => { scatterCards(); startAutoScatter(); });
+    } else {
+      stopAutoScatter();
     }
 
     // Update hash
@@ -1945,6 +2273,34 @@
     });
   }
 
+  // ─── AUTO-SCATTER TIMER ───
+  let autoScatterTimer = null;
+
+  function scatterWithAnimation() {
+    const grid = document.querySelector('.trab-grid');
+    if (!grid) return;
+    // adiciona classe de transição em todos os cards
+    grid.querySelectorAll('.trab-card').forEach(c => c.classList.add('auto-moving'));
+    scatterCards();
+    // remove a classe depois da animação terminar
+    setTimeout(() => {
+      grid.querySelectorAll('.trab-card').forEach(c => c.classList.remove('auto-moving'));
+    }, 1000);
+  }
+
+  function startAutoScatter() {
+    stopAutoScatter();
+    autoScatterTimer = setInterval(scatterWithAnimation, 30000);
+  }
+
+  function stopAutoScatter() {
+    if (autoScatterTimer) { clearInterval(autoScatterTimer); autoScatterTimer = null; }
+  }
+
+  function resetAutoScatter() {
+    startAutoScatter(); // reinicia a contagem do zero
+  }
+
   function initDraggableCards() {
     const grid = document.querySelector('.trab-grid');
     if (!grid) return;
@@ -1956,6 +2312,7 @@
       card.addEventListener('mousedown', function(e) {
         if (e.button !== 0) return;
         e.preventDefault();
+        resetAutoScatter(); // usuário interagiu — reinicia contagem
         const cards = Array.from(grid.querySelectorAll('.trab-card'));
         const startX    = e.clientX;
         const startY    = e.clientY;
@@ -1987,6 +2344,7 @@
       // ── Touch ──
       let tStartX, tStartY, tLeft, tTop, tDragged;
       card.addEventListener('touchstart', function(e) {
+        resetAutoScatter(); // usuário interagiu — reinicia contagem
         const t = e.touches[0];
         tStartX = t.clientX; tStartY = t.clientY;
         tLeft   = parseInt(card.style.left) || 0;
